@@ -9,6 +9,7 @@ import {
   POWER_DURATION_MS,
   SCORE_VALUES,
 } from '../constants';
+import { PACMAN_MOUTH_SPEED } from '../constants';
 import {
   countRemainingDots,
   getValidDirections,
@@ -40,6 +41,9 @@ export function usePacmanGame() {
 
   const pendingDir = useRef(DIRECTIONS.NONE);
   const loopId = useRef(null);
+  // mouth animation phase in [0,1)
+  const [mouthPhase, setMouthPhase] = useState(0);
+  const mouthLoopId = useRef(null);
 
   const tickInterval = useMemo(() => {
     const speed = Math.max(
@@ -183,6 +187,23 @@ export function usePacmanGame() {
     };
   }, [paused, lives, stepPacman, stepGhosts, handleCollisions, tickInterval]);
 
+  // Mouth animation loop: independent from game tick to keep smooth animation.
+  useEffect(() => {
+    const hz = Number.isFinite(PACMAN_MOUTH_SPEED) ? Math.max(0.5, PACMAN_MOUTH_SPEED) : 2.5;
+    // update at 30 FPS to be light-weight
+    const interval = 1000 / 30;
+    mouthLoopId.current = setInterval(() => {
+      // delta phase per frame = hz / fps
+      setMouthPhase((p) => {
+        const next = p + hz / 30;
+        return next - Math.floor(next); // wrap to [0,1)
+      });
+    }, interval);
+    return () => {
+      if (mouthLoopId.current) clearInterval(mouthLoopId.current);
+    };
+  }, []);
+
   // Keyboard handler
   useEffect(() => {
     const onKey = (e) => {
@@ -236,6 +257,7 @@ export function usePacmanGame() {
     paused,
     poweredActive,
     gameOver,
+    mouthPhase,
     // actions
     setIntentDirection,
     togglePause,

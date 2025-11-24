@@ -47,8 +47,25 @@ export const GAME_SPEEDS = {
   minTick: 70,
 };
 
+/**
+ * Duration in ms for power pellet effect.
+ */
 // PUBLIC_INTERFACE
 export const POWER_DURATION_MS = 7000;
+
+/**
+ * Pac-Man mouth animation speed (Hz) controlling open/close oscillation.
+ * Example: 2.5 means 2.5 cycles per second.
+ */
+// PUBLIC_INTERFACE
+export const PACMAN_MOUTH_SPEED = 2.5;
+
+/**
+ * Maximum mouth opening in degrees used when drawing the arc sector.
+ * Classic look is around 35 degrees.
+ */
+// PUBLIC_INTERFACE
+export const PACMAN_MAX_MOUTH_DEG = 35;
 
 // PUBLIC_INTERFACE
 export const SCORE_VALUES = Object.freeze({

@@ -7,6 +7,7 @@ A classic Pac-Man game built with a lightweight React template.
 - Maze rendering with dots and power pellets
 - Ghost AI with chase/evade behavior
 - Scoring, lives, levels with increasing speed
+- Animated Pac-Man mouth open/close synced with movement and direction
 - Pause/Reset, responsive layout, accessible UI
 
 ## Scripts
@@ -30,5 +31,12 @@ See `.env.example` for available variables. Do not commit secrets.
 - `src/game/hooks/usePacmanGame.js` – game loop, movement, collisions
 - `src/game/components/*` – UI components
 - `src/GamePage.jsx` – page composition
+
+### Animation
+- Pac-Man mouth animation is controlled by:
+  - `PACMAN_MOUTH_SPEED` (cycles per second)
+  - `PACMAN_MAX_MOUTH_DEG` (maximum opening angle)
+- Utility: `src/game/utils/animationUtils.js` provides `mouthPhaseToAngle` and `directionToHeading`.
+- The animation continues subtly when paused for visual feedback.
 
 Security: No secrets are hardcoded; environment variables are referenced via `process.env`. Inputs are handled safely and no dangerous eval/exec patterns are used.

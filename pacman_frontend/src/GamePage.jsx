@@ -23,6 +23,7 @@ export default function GamePage() {
     resetGame,
     onTouchStart,
     onTouchEnd,
+    mouthPhase,
   } = usePacmanGame();
 
   const [theme, setTheme] = useState('light');
@@ -72,7 +73,7 @@ export default function GamePage() {
         <div style={{ position: 'relative', width: '100%' }}>
           <GameBoard
             maze={maze}
-            pacman={pacman}
+            pacman={{ ...pacman, mouthPhase }}
             ghosts={ghosts}
             poweredActive={poweredActive}
             onTouchStart={onTouchStart}

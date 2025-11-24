@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import { TILE_SIZE } from '../constants';
+import { TILE_SIZE, PACMAN_MAX_MOUTH_DEG } from '../constants';
+import { mouthPhaseToAngle, directionToHeading } from '../utils/animationUtils';
 
 /**
  * PUBLIC_INTERFACE
  * GameBoard component renders the game using a canvas for performance.
  * Props:
  * - maze: number[][]
- * - pacman: {x, y}
+ * - pacman: {x, y, dir, mouthPhase?}
  * - ghosts: Array<{x, y, color}>
  * - poweredActive: boolean
  * - onTouchStart, onTouchEnd: handlers for swipe controls
@@ -70,13 +71,31 @@ export default function GameBoard({
       }
     }
 
-    // Draw Pac-Man
-    const pacX = pacman.x * TILE_SIZE + TILE_SIZE / 2;
-    const pacY = pacman.y * TILE_SIZE + TILE_SIZE / 2;
-    ctx.fillStyle = poweredActive ? '#06b6d4' : '#fbbf24';
-    ctx.beginPath();
-    ctx.arc(pacX, pacY, TILE_SIZE / 2 - 2, 0, Math.PI * 2);
-    ctx.fill();
+    // Draw Pac-Man as an arc sector with animated mouth
+    {
+      const pacX = pacman.x * TILE_SIZE + TILE_SIZE / 2;
+      const pacY = pacman.y * TILE_SIZE + TILE_SIZE / 2;
+      const radius = TILE_SIZE / 2 - 2;
+      const dirName =
+        pacman?.dir?.name || pacman?.dir?.toString?.() || 'RIGHT';
+      const heading = directionToHeading(dirName);
+
+      // Subtle mouth when phase not provided (paused or initial)
+      const phase =
+        typeof pacman.mouthPhase === 'number' ? pacman.mouthPhase : 0.15;
+      const half = mouthPhaseToAngle(phase, PACMAN_MAX_MOUTH_DEG);
+
+      // Start/end around heading so that wedge faces direction
+      const start = heading + half;
+      const end = heading - half + Math.PI * 2;
+
+      ctx.fillStyle = poweredActive ? '#06b6d4' : '#fbbf24';
+      ctx.beginPath();
+      ctx.moveTo(pacX, pacY);
+      ctx.arc(pacX, pacY, radius, start, end, false);
+      ctx.closePath();
+      ctx.fill();
+    }
 
     // Draw Ghosts
     ghosts.forEach((g) => {
