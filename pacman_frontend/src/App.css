@@ -29,6 +29,17 @@
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+.btn {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--button-bg);
+  color: var(--button-text);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
